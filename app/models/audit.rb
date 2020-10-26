@@ -7,7 +7,7 @@ class Audit < ApplicationRecord
   end
 
   def update?
-    transaction_scope = 'update'
+    transaction_scope == 'update'
   end
 
   def self.trail!(entity, action)
