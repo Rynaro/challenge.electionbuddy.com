@@ -12,10 +12,6 @@ module Auditable
       audit_it(instance, :update)
     end
 
-    after_destroy do |instance|
-      # audit_it(instance, :destroy)
-    end
-
     def audit?
       trackable_attributes.present?
     end
