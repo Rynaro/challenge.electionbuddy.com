@@ -1,39 +1,32 @@
-FROM ruby:2.6.1
-LABEL maintainer="bradyb@electionbuddy.com"
+FROM ruby:2.6-alpine
 
-# Install required Ubuntu packages.
-RUN apt-get update && \
-  apt-get install -y curl git gnupg apt-transport-https ca-certificates
+RUN apk update && apk upgrade
 
-# Need a JS runtime for asset compilation.
-RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo 'deb https://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get update && \
-  apt-get install -y nodejs yarn
+RUN apk add --no-cache \
+  gcc \
+  build-base \
+  nodejs \
+  npm \
+  yarn \
+  sqlite-dev
 
-RUN useradd --create-home --shell /bin/bash app
-COPY --chown=app:app .ruby-version Gemfile Gemfile.lock /home/app/challenge.electionbuddy.com/
+RUN mkdir /opt/application
+WORKDIR /opt/application
 
-WORKDIR /home/app/challenge.electionbuddy.com
-RUN rm -rf ./.git
-RUN rm -rf ./working
+ADD Gemfile /opt/application
+ADD Gemfile.lock /opt/application
 
 RUN yes | gem uninstall bundler --all && \
   export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ") && \
   gem install bundler -v "$BUNDLER_VERSION"
 
-USER app
+# Do not install development or test gems in production
+RUN if [ "$RAILS_ENV" = "production" ]; then \
+  bundle install -j 4 -r 3 --without development test; \
+  else bundle install -j 4 -r 3; \
+  fi
 
-# Throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
-
-RUN bundle config set deployment 'true'
-RUN bundle install
-
-COPY --chown=app:app . /home/app/challenge.electionbuddy.com/
-
-RUN bundle exec rake assets:precompile
-
-# Back to root for start.
-USER root
+# generate production assets if production environment
+RUN if [ "$RAILS_ENV" = "production" ]; then \
+  bundle exec rake assets:precompile; \
+  fi
