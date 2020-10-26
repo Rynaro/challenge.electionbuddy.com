@@ -6,7 +6,7 @@ class AnswersController < ApplicationController
   # GET /answers
   # GET /answers.json
   def index
-    @answers = Answer.all
+    @answers = @question.answers
   end
 
   # GET /answers/1
@@ -71,7 +71,7 @@ class AnswersController < ApplicationController
     end
 
     def set_question
-      @question = Question.find(params[:question_id])
+      @question = Question.includes(:answers).find(params[:question_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

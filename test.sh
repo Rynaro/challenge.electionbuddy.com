@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose run web rails tests
+docker-compose run web rails test
