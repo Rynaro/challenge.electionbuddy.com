@@ -4,11 +4,11 @@ module Elections::AuditsHelper
   end
 
   def create_sentence(audit)
-    "[#{occurrence_format(audit.created_at)}] #{audit.auditable_type} was created by #{audit.user.id}"
+    "[#{occurrence_format(audit.created_at)}] #{audit.auditable_type} was created by User ##{audit.user.id}"
   end
 
   def update_sentence(audit, attribute, older_value, newer_value)
-    "[#{occurrence_format(audit.created_at)}] #{attribute} of #{audit.auditable_type} was changed from #{older_value} to #{newer_value} by #{audit.user.id}"
+    "[#{occurrence_format(audit.created_at)}] #{attribute} of #{audit.auditable_type} was changed from #{older_value} to #{newer_value} by User ##{audit.user.id}"
   end
 
   def occurrence_format(created_at)
