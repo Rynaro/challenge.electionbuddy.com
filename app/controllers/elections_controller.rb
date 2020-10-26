@@ -5,7 +5,7 @@ class ElectionsController < ApplicationController
   # GET /elections
   # GET /elections.json
   def index
-    @elections = current_user.elections
+    @elections = Current.user.elections
   end
 
   # GET /elections/1
@@ -25,7 +25,7 @@ class ElectionsController < ApplicationController
   # POST /elections
   # POST /elections.json
   def create
-    @election = Election.new(election_params.merge(user: current_user))
+    @election = Election.new(election_params.merge(user: Current.user))
 
     respond_to do |format|
       if @election.save

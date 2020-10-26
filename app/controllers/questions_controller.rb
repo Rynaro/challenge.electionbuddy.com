@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   # GET /questions
   # GET /questions.json
   def index
-    @questions = Question.all
+    @questions = @election.questions
   end
 
   # GET /questions/1
@@ -71,7 +71,7 @@ class QuestionsController < ApplicationController
     end
 
     def set_election
-      @election = Election.find(params[:election_id])
+      @election = Election.includes(:questions).find(params[:election_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -1,0 +1,13 @@
+<% if audit.create? %>
+  <li>
+    <%= create_sentence(audit) %>
+  </li>
+<% end %>
+
+<% if audit.update? %>
+  <% audit.data_changes.each do |attribute, value| %>
+    <li>
+      <%= update_sentence(audit, attribute, value[0], value[1]) %>
+    </li>
+  <% end %>
+<% end %>

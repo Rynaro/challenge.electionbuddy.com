@@ -1,0 +1,7 @@
+<h1>Audit Election <%= @election.name %></h1>
+
+<ul>
+  <% @audits.each do |audit| %>
+    <%= render_audit(audit) %>
+  <% end %>
+</ul>
