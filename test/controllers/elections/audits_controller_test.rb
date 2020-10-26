@@ -1,7 +1,15 @@
 require 'test_helper'
 
 class Elections::AuditsControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+  setup do
+    @election = elections(:one)
+    @voter = voters(:one)
+    @answer = answers(:one)
+    @question = questions(:one)
+  end
+
+  test "should get index" do
+    get election_audits_url(@election)
+    assert_response :success
+  end
 end
