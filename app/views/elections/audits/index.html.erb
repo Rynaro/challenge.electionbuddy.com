@@ -1,5 +1,7 @@
 <h1>Audit Election <%= @election.name %></h1>
 
+<%= link_to 'Back', elections_path %>
+
 <ul>
   <% @audits.each do |audit| %>
     <%= render_audit(audit) %>
